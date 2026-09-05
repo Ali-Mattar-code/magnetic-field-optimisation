@@ -173,7 +173,8 @@ magnetic-field-optimisation/
 
 This is a **2026 clean-room public implementation** based on the specification and experiments from my UCL MSc Physics thesis. The underlying research was completed between **September 2024 and September 2025**. It is not presented as the original thesis source code.
 
-**Author:** Ali Mattar  
+**Author:** Ali Mattar
+
 **Research area:** scientific machine learning, constrained optimisation, electromagnetics, and inverse design
 
 ## Licence
