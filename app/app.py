@@ -14,7 +14,10 @@ from magfield.physics import influence_matrix
 
 st.set_page_config(page_title="Magnetic Field Inverse Design", layout="wide")
 st.title("Physics-Constrained Magnetic Field Inverse Design")
-st.caption("Clean-room research demonstrator - all candidates are verified by Biot-Savart simulation.")
+st.caption(
+    "Clean-room research demonstrator - all candidates are verified by "
+    "Biot-Savart simulation."
+)
 
 with st.sidebar:
     st.header("Design")
@@ -71,4 +74,7 @@ with right:
     st.subheader("Current map")
     st.dataframe(np.round(result.currents.reshape(grid, grid), 2), use_container_width=True)
     st.write(f"Leakage ratio beyond +/-40 mm: **{leakage_ratio(x, profile, 0.040):.3f}**")
-    st.info("Simulation only. Driver voltage, thermal transients, and nearby materials are outside this model.")
+    st.info(
+        "Simulation only. Driver voltage, thermal transients, and nearby materials "
+        "are outside this model."
+    )

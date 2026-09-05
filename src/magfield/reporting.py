@@ -122,7 +122,15 @@ def plot_field_map(
         linewidths=0.65,
         alpha=0.75,
     )
-    ax.scatter([0.0], [target_depth * 1e3], marker="x", s=80, lw=2.0, color="#FFCB47", label="Target")
+    ax.scatter(
+        [0.0],
+        [target_depth * 1e3],
+        marker="x",
+        s=80,
+        lw=2.0,
+        color="#FFCB47",
+        label="Target",
+    )
     ax.axhline(0.0, color="#1B263B", lw=2.0, alpha=0.8)
     ax.set(
         xlabel="Lateral position (mm)",

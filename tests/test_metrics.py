@@ -15,5 +15,6 @@ def test_fwhm_for_gaussian():
 def test_error_metrics():
     assert relative_error(9.0, 10.0) == pytest.approx(0.1)
     assert normalised_rmse(np.array([0.0, 1.0]), np.array([0.0, 1.0])) == 0
-    assert leakage_ratio(np.array([-2, -1, 0, 1, 2]), np.array([1, 2, 5, 2, 1]), 1) == pytest.approx(0.2)
-
+    assert leakage_ratio(
+        np.array([-2, -1, 0, 1, 2]), np.array([1, 2, 5, 2, 1]), 1
+    ) == pytest.approx(0.2)

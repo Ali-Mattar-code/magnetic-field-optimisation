@@ -37,7 +37,7 @@ class Coil:
     def conductor_length(self) -> float:
         return float(2.0 * np.pi * self.radius * self.turns)
 
-    def moved(self, offset: np.ndarray) -> "Coil":
+    def moved(self, offset: np.ndarray) -> Coil:
         centre = tuple(np.asarray(self.centre) + np.asarray(offset))
         return replace(self, centre=centre)
 
@@ -79,4 +79,3 @@ def tilted_normal(normal: np.ndarray, tilt_x: float, tilt_y: float) -> np.ndarra
     rx = np.array([[1, 0, 0], [0, cx, -sx], [0, sx, cx]])
     ry = np.array([[cy, 0, sy], [0, 1, 0], [-sy, 0, cy]])
     return ry @ rx @ np.asarray(normal, dtype=float)
-

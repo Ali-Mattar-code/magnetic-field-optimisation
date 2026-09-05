@@ -1,4 +1,5 @@
 import numpy as np
+import pytest
 
 from magfield.geometry import Coil
 from magfield.physics import analytic_on_axis, influence_matrix, loop_field, superposed_field
@@ -26,7 +27,3 @@ def test_influence_matrix_matches_direct_superposition():
     currents = np.array([2.0, -0.5])
     matrix_result = (influence_matrix(points, coils) @ currents).reshape(-1, 3)
     np.testing.assert_allclose(matrix_result, superposed_field(points, coils, currents))
-
-
-import pytest
-
