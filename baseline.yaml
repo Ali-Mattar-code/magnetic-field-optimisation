@@ -1,0 +1,30 @@
+experiment:
+  name: baseline-high-resolution
+  seed: 42
+geometry:
+  rows: 5
+  columns: 5
+  spacing_m: 0.026
+  radius_m: 0.018
+  turns: 10
+  segments: 192
+  wire_radius_m: 0.00075
+  resistivity_ohm_m: 1.68e-8
+field:
+  target_depth_m: 0.060
+  target_tesla: 5.0e-5
+  profile_half_width_m: 0.100
+  samples: 401
+  target_sigma_m: 0.018
+optimisation:
+  regularisation: 3.0e-8
+  target_weight: 1500.0
+  leakage_weight: 30.0
+  max_current_a: 12.0
+  target_tolerance: 0.02
+robustness:
+  draws: 250
+  current_sigma_fraction: 0.01
+  resistance_sigma_fraction: 0.03
+  position_sigma_m: 0.00025
+  tilt_sigma_deg: 0.25

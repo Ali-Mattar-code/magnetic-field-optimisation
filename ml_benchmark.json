@@ -1,0 +1,23 @@
+{
+  "evidence_level": "exploratory-local-benchmark",
+  "samples": 400,
+  "features": [
+    "radius",
+    "spacing",
+    "depth",
+    "radius/depth",
+    "spacing/depth",
+    "spacing/radius",
+    "depth/radius",
+    "analytical_axial_loop_scale",
+    "inverse_depth_cubed"
+  ],
+  "train_samples": 320,
+  "test_samples": 80,
+  "multi_output_nrmse": 0.07222947795203999,
+  "power_nrmse": 0.05917908191487858,
+  "peak_current_nrmse": 0.08527987398920141,
+  "solver_seconds_per_case": 0.012842147279999949,
+  "measured_prediction_speedup": 11.412171518522253,
+  "warning": "Timing depends on CPU, solver, discretisation, and batch size."
+}

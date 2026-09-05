@@ -1,0 +1,86 @@
+{
+  "config_path": "configs/quick_reproduction.yaml",
+  "electrical": {
+    "currents_a": [
+      -5.238696236279864,
+      4.037308721546047,
+      3.5026131016224307,
+      4.037308736128394,
+      -5.238696267889567,
+      -3.3676301248204683,
+      -0.9234545353867539,
+      4.784204357241825,
+      -0.9234546032940706,
+      -3.3676301130148034,
+      8.424343523010158,
+      -8.149047314991202,
+      7.798300946135581,
+      -8.14904727288543,
+      8.424343505851153,
+      -3.3676301301615004,
+      -0.923454593183037,
+      4.78420442303018,
+      -0.923454603917572,
+      -3.367630097738103,
+      -5.238696239614026,
+      4.037308731039762,
+      3.5026131270297722,
+      4.037308752174799,
+      -5.238696256513032
+    ],
+    "ohmic_power_w": 6.769785994868646,
+    "peak_current_a": 8.424343523010158,
+    "stored_magnetic_energy_j": 0.002237636461279941
+  },
+  "evidence_level": "reproduced-by-this-repository",
+  "experiment": {
+    "name": "quick-reproduction",
+    "seed": 42
+  },
+  "field": {
+    "achieved_tesla": 4.9928139338680914e-05,
+    "fwhm_m": 0.04166666666666666,
+    "leakage_ratio_fixed_40mm_guard": 0.04571534784220629,
+    "profile_nrmse": 0.021794267908968858,
+    "target_relative_error": 0.0014372132263817754,
+    "target_tesla": 5e-05
+  },
+  "geometry": {
+    "columns": 5,
+    "radius_m": 0.018,
+    "resistivity_ohm_m": 1.68e-08,
+    "rows": 5,
+    "segments": 96,
+    "spacing_m": 0.026,
+    "turns": 10,
+    "wire_radius_m": 0.00075
+  },
+  "pareto": {
+    "knee_index": 6,
+    "knee_regularisation": 1e-07,
+    "points": 11
+  },
+  "robustness": {
+    "assumptions": {
+      "current_sigma_fraction": 0.01,
+      "draws": 60,
+      "position_sigma_m": 0.00025,
+      "resistance_sigma_fraction": 0.03,
+      "tilt_sigma_deg": 0.25
+    },
+    "draws": 60,
+    "median_target_error": 0.013661341284576082,
+    "p95_target_error": 0.04056509421891056
+  },
+  "solver": {
+    "backend": "scipy",
+    "iterations": 21,
+    "message": "Optimization terminated successfully",
+    "success": true
+  },
+  "validation": {
+    "helmholtz_centre_relative_error": 0.00014279897253674276,
+    "passed": true,
+    "single_loop_max_relative_error": 0.00021696406588569479
+  }
+}

@@ -1,0 +1,11 @@
+provenance: historical-thesis-result-not-reproduced-by-this-config
+research_period: "2024-09 to 2025-09"
+claims:
+  power_reduction_fraction: 0.19
+  forward_evaluation_speedup: 225
+  solver_speedup: 2.2
+notes:
+  - These values are transcribed from the submitted dissertation.
+  - They are not emitted as reproduced results by this public clean-room code.
+  - Use configs/quick_reproduction.yaml for the independently reproducible workflow.
+

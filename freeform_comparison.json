@@ -1,0 +1,25 @@
+{
+  "warning": "Different conductor bases; do not interpret as equal-cost hardware.",
+  "results": [
+    {
+      "label": "regular-5x5",
+      "evidence_level": "exploratory-not-cost-equivalent",
+      "coils": 25,
+      "fwhm_m": 0.04166666666666666,
+      "leakage_ratio_beyond_40mm": 0.04571534784220629,
+      "ohmic_power_w": 6.769785994868646,
+      "peak_current_a": 8.424343523010158,
+      "solver_success": true
+    },
+    {
+      "label": "multi-scale",
+      "evidence_level": "exploratory-not-cost-equivalent",
+      "coils": 11,
+      "fwhm_m": 0.04166666666666666,
+      "leakage_ratio_beyond_40mm": 0.04138678236738301,
+      "ohmic_power_w": 10.345508773584498,
+      "peak_current_a": 12.0,
+      "solver_success": true
+    }
+  ]
+}
