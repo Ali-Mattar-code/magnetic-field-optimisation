@@ -20,6 +20,12 @@ The solver balances target accuracy, off-target leakage, and Ohmic heating:
 
 subject to a target-field tolerance and per-channel current limits. The SciPy backend solves the convex quadratic with SLSQP. The optional CVXPY backend represents the same program directly.
 
+### Identifiability and conditioning
+
+Before optimisation, the pipeline computes the singular-value spectrum of the weighted influence matrix `W A`. The reported numerical rank counts modes whose singular value exceeds `1e-10` of the largest. The nullity therefore exposes current combinations that the sampled field cannot reliably distinguish, while the retained condition number quantifies amplification across controllable modes.
+
+This diagnostic explains why regularisation is structurally necessary; it is not a guarantee that a chosen regularisation strength is optimal. Rank and conditioning depend on the observation grid, coil geometry, field component and row weights.
+
 ## Metrics
 
 - target relative error;

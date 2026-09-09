@@ -83,6 +83,32 @@ def plot_robustness(path: str | Path, errors: np.ndarray) -> None:
     plt.close(fig)
 
 
+def plot_singular_spectrum(
+    path: str | Path,
+    relative_singular_values: np.ndarray,
+    relative_tolerance: float,
+) -> None:
+    """Plot controllable modes of the weighted inverse-design operator."""
+    values = np.asarray(relative_singular_values, dtype=float)
+    modes = np.arange(1, len(values) + 1)
+    floor = max(relative_tolerance / 100.0, np.finfo(float).tiny)
+    fig, ax = plt.subplots(figsize=(6.4, 4.3))
+    ax.semilogy(modes, np.maximum(values, floor), "o-", color="#12355B", lw=2.0)
+    ax.axhline(relative_tolerance, color="#E4572E", ls="--", label="Rank tolerance")
+    ax.set(
+        xlabel="Singular mode",
+        ylabel="Singular value / largest singular value",
+        title="Weighted inverse-problem spectrum",
+    )
+    ax.set_xticks(modes)
+    ax.grid(alpha=0.2, which="both")
+    ax.legend(frameon=False)
+    fig.tight_layout()
+    Path(path).parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+
+
 def plot_field_map(
     path: str | Path,
     coils: list[Coil],

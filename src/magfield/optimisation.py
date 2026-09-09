@@ -18,6 +18,85 @@ class OptimisationResult:
     iterations: int | None = None
 
 
+@dataclass(frozen=True)
+class InverseProblemDiagnostics:
+    observations: int
+    control_channels: int
+    numerical_rank: int
+    nullity: int
+    relative_rank_tolerance: float
+    condition_number: float | None
+    retained_condition_number: float | None
+    relative_singular_values: tuple[float, ...]
+
+    def to_dict(self) -> dict[str, int | float | bool | None | list[float]]:
+        return {
+            "observations": self.observations,
+            "control_channels": self.control_channels,
+            "numerical_rank": self.numerical_rank,
+            "nullity": self.nullity,
+            "rank_deficient_at_tolerance": self.numerical_rank
+            < min(self.observations, self.control_channels),
+            "relative_rank_tolerance": self.relative_rank_tolerance,
+            "condition_number": self.condition_number,
+            "retained_condition_number": self.retained_condition_number,
+            "relative_singular_values": list(self.relative_singular_values),
+        }
+
+
+def diagnose_inverse_problem(
+    influence: np.ndarray,
+    *,
+    weights: np.ndarray | None = None,
+    relative_tolerance: float = 1e-10,
+) -> InverseProblemDiagnostics:
+    """Diagnose controllable modes of an influence matrix with an SVD.
+
+    Row weights may be supplied to analyse the same weighted operator used by
+    the objective. Only singular values above ``relative_tolerance`` times the
+    largest are treated as numerically retained modes.
+    """
+    influence = np.asarray(influence, dtype=float)
+    if influence.ndim != 2 or min(influence.shape) == 0:
+        raise ValueError("influence must be a non-empty two-dimensional matrix")
+    if not np.all(np.isfinite(influence)):
+        raise ValueError("influence must contain only finite values")
+    if not 0.0 < relative_tolerance < 1.0:
+        raise ValueError("relative_tolerance must be in (0, 1)")
+
+    operator = influence
+    if weights is not None:
+        weights = np.asarray(weights, dtype=float)
+        if weights.shape != (influence.shape[0],):
+            raise ValueError("weights must have one value per influence row")
+        if not np.all(np.isfinite(weights)) or np.any(weights < 0):
+            raise ValueError("weights must be finite and non-negative")
+        scale = max(float(np.max(weights)), np.finfo(float).tiny)
+        operator = (weights / scale)[:, None] * influence
+
+    singular_values = np.linalg.svd(operator, compute_uv=False)
+    largest = float(singular_values[0])
+    if largest == 0.0:
+        relative = np.zeros_like(singular_values)
+    else:
+        relative = singular_values / largest
+    retained = relative > relative_tolerance
+    numerical_rank = int(retained.sum())
+    smallest_retained = float(relative[retained][-1]) if numerical_rank else None
+    full_rank = numerical_rank == min(influence.shape)
+    condition_number = float(1.0 / relative[-1]) if full_rank and relative[-1] > 0 else None
+    return InverseProblemDiagnostics(
+        observations=influence.shape[0],
+        control_channels=influence.shape[1],
+        numerical_rank=numerical_rank,
+        nullity=max(0, influence.shape[1] - numerical_rank),
+        relative_rank_tolerance=relative_tolerance,
+        condition_number=condition_number,
+        retained_condition_number=float(1.0 / smallest_retained) if smallest_retained else None,
+        relative_singular_values=tuple(float(value) for value in relative),
+    )
+
+
 def _quadratic_terms(
     influence: np.ndarray,
     target: np.ndarray,
@@ -144,4 +223,3 @@ def _solve_cvxpy(
         message=str(problem.status),
         backend="cvxpy",
     )
-

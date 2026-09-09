@@ -4,7 +4,7 @@
 
 [![CI](https://github.com/Ali-Mattar-code/magnetic-field-optimisation/actions/workflows/ci.yml/badge.svg)](https://github.com/Ali-Mattar-code/magnetic-field-optimisation/actions/workflows/ci.yml)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
-[![Tests](https://img.shields.io/badge/tests-16%20passing-2E8B57)](tests/)
+[![Tests](https://img.shields.io/badge/tests-20%20passing-2E8B57)](tests/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-2E8B57.svg)](LICENSE)
 
 This project solves a deceptively difficult engineering problem: **how should an array of individually controlled coils be driven to create a strong, localised magnetic field while limiting leakage, current, and heat?**
@@ -30,6 +30,8 @@ The committed quick-reproduction configuration currently produces:
 | Ohmic power | **6.77 W** | Explicit copper-loss calculation, separate from inductive energy |
 | Peak channel current | **8.42 A** | Within the configured 12 A driver limit |
 | Robustness error | **4.06% at the 95th percentile** | 60 seeded perturbation trials across control and manufacturing errors |
+| Weighted inverse rank | **15 / 25 modes** at 1e-10 tolerance | Exposes a 10-dimensional numerical null space before optimisation |
+| Retained condition number | **9.01 million** | Quantifies sensitivity across the modes treated as controllable |
 | ML surrogate benchmark | **7.22% mean NRMSE** | Physics-informed 400-case study with 80 held-out cases; candidates remain solver-verifiable |
 
 These are **simulation results**, not hardware measurements. Every value above is generated from committed code and configuration; assumptions are stored in [`results/reproduction_summary.json`](results/reproduction_summary.json).
@@ -43,6 +45,7 @@ These are **simulation results**, not hardware measurements. Every value above i
 
 - A vectorised 3-D Biot-Savart engine for arbitrarily positioned and oriented circular coils.
 - A field influence matrix that converts an expensive geometry calculation into the linear map `B = A I`.
+- SVD diagnostics for numerical rank, nullity and conditioning of the weighted inverse problem.
 - A constrained quadratic optimiser balancing field fidelity, leakage suppression, Ohmic power, and per-channel current limits.
 - Two interchangeable optimisation paths: SciPy by default and optional CVXPY.
 - Physics validation against analytical single-loop and Helmholtz-pair solutions.
@@ -85,6 +88,12 @@ $$
 
 subject to a target-field tolerance and per-channel current limits.
 
+The weighted operator has 15 retained modes across 25 current channels at the documented relative tolerance. This means the sampled axial profile cannot uniquely distinguish every current combination: the optimiser needs regularisation to select a stable solution from nearly equivalent controls. The spectrum is reported before solving so that this limitation is visible rather than hidden behind a successful objective value.
+
+<p align="center">
+  <img src="results/figures/singular_spectrum.png" width="62%" alt="Relative singular-value spectrum of the weighted influence matrix">
+</p>
+
 Two electrical quantities are intentionally kept separate:
 
 - **Steady-state heat loss:** `P_ohmic = I^T R I`
@@ -123,7 +132,7 @@ magfield reproduce --config configs/baseline.yaml --backend cvxpy
 
 | Artefact | Contents |
 |---|---|
-| [`reproduction_summary.json`](results/reproduction_summary.json) | Configuration, validation, field, electrical, solver, and robustness results |
+| [`reproduction_summary.json`](results/reproduction_summary.json) | Configuration, validation, field, electrical, solver, inverse-conditioning and robustness results |
 | [`field_profile.csv`](results/field_profile.csv) | Target and realised axial-field samples |
 | [`pareto_points.csv`](results/pareto_points.csv) | Power-error regularisation sweep |
 | [`ml_benchmark.json`](results/ml_benchmark.json) | Exploratory local surrogate benchmark |

@@ -16,7 +16,7 @@ from .electrical import (
 )
 from .geometry import planar_array
 from .metrics import fwhm, leakage_ratio, normalised_rmse, relative_error
-from .optimisation import solve_currents
+from .optimisation import diagnose_inverse_problem, solve_currents
 from .pareto import knee_index, sweep
 from .physics import influence_matrix
 from .reporting import (
@@ -25,6 +25,7 @@ from .reporting import (
     plot_field_profile,
     plot_pareto,
     plot_robustness,
+    plot_singular_spectrum,
     write_field_profile,
     write_json,
 )
@@ -76,6 +77,10 @@ def run_experiment(
     resistance = resistance_matrix(problem["coils"])
     inductance = approximate_inductance_matrix(problem["coils"])
     options = config["optimisation"]
+    inverse_diagnostics = diagnose_inverse_problem(
+        problem["influence"],
+        weights=problem["weights"],
+    )
     result = solve_currents(
         problem["influence"],
         problem["target"],
@@ -131,6 +136,7 @@ def run_experiment(
             "message": result.message,
             "iterations": result.iterations,
         },
+        "inverse_problem": inverse_diagnostics.to_dict(),
         "validation": validation.to_dict(),
         "geometry": config["geometry"],
         "field": {
@@ -193,4 +199,9 @@ def run_experiment(
         knee,
     )
     plot_robustness(figure_dir / "robustness.png", robust.target_errors)
+    plot_singular_spectrum(
+        figure_dir / "singular_spectrum.png",
+        np.asarray(inverse_diagnostics.relative_singular_values),
+        inverse_diagnostics.relative_rank_tolerance,
+    )
     return summary
